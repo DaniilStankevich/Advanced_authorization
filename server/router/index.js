@@ -8,8 +8,8 @@ router.post('/login', useController.login )
 router.post('/logout', useController.logout) 
 
 router.get('/activate/:link', useController.activate) // активация аккаунта по ссылке
-router.get('/refresh', useController.refresh)        // перезапись access в случае истечение его жизни
-router.get('/users', useController.getUsers)          // end-point test для авторизованным пользователей
+router.get('/refresh', useController.refresh)         // перезапись access в случае истечение его жизни
+router.get('/users', useController.getUsers)          // end-point test для авторизованных пользователей
 
 
 module.exports = router

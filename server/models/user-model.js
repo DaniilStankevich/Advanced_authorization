@@ -1,7 +1,7 @@
 const {Schema, model} = require('mongoose')
 
 
-// Описание какие пля будет содержать сущность "user"
+// Описание какие поля будет содержать сущность "user"
 const UserShema = new Schema({
 
     email: { type: String, unique: true, required: true },
@@ -12,4 +12,4 @@ const UserShema = new Schema({
 
 })
 
-module.exports = model('user', UserShema)
+module.exports = model('User', UserShema)

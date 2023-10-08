@@ -1,7 +1,7 @@
 const {Schema, model} = require('mongoose')
 
 
-// Схема хранение refresh токена, id пользователя, 
+// Схема хранение refresh токена, id пользователя 
 const TokenShema = new Schema({
 
     user: {type: Schema.Types.ObjectId, ref: 'User' },  //ссылка на пользователя
@@ -9,4 +9,4 @@ const TokenShema = new Schema({
 
 })
 
-module.exports = model('user', TokenShema) 
+module.exports = model('Token', TokenShema) 
