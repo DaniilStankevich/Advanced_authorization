@@ -8,10 +8,10 @@ class UseController  {
         try {
 
             const {email, password} = req.body
+            
+            const userData = await userSevice.registration(email, password)
 
-           const userData = await userSevice.registration(email, password)
-
-           console.log(userData, '- что возращает сама функция')
+            console.log(userData, '- что возращает сама функция')
 
             res.cookie('refreshtoken',  userData.refreshToken, {maxAge: 30 * 24 * 60 * 1000, httpOnly: true} )
             return res.json(userData)

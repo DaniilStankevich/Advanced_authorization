@@ -25,7 +25,7 @@ class UserSevice {
         const user = await UserModel.create({ email, password: hashPassword, activationLink}) 
 
         // Отправка письма на почту
-        await mailService.sendActivationMail(email, activationLink)
+        await mailService.sendActivationMail(email, `${process.env.API_URL}/api/activate/${activationLink}`)
 
         const userDTO = new userDto(user) // id, email, isActivated
 
@@ -35,7 +35,7 @@ class UserSevice {
         const tokens = tokenService.generateTokens({...userDTO}) // нужно передавать какую-то информацию о пользователе но не пароль
         console.log(tokens, '- токены')
 
-        // Сохранение этих токенов
+        // Сохранение refreshToken токена в БД
         await tokenService.saveToken(userDTO.id, tokens.refreshToken)
 
         return {
