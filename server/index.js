@@ -5,14 +5,20 @@ const cors = require('cors')  // для беспроблемных отправ�
 const cookieParser = require('cookie-parser') 
 const router = require('./router/index')
 
+const errorMiddleware = require('./middlewares/error-middleware')
+
 // Создание экзепляра приложения цуацуа
 const app = express()
 const PORT = process.env.PORT | 5000
 
+//Middleware
 app.use(express.json())
 app.use(cookieParser())  // для обратоки cookie в каждом запросе
 app.use(cors())          // позволяет принимать запросы  от любого источника
 app.use('/api', router)
+app.use(errorMiddleware)
+
+
 
 const options = {
     useNewUrlParser: true,

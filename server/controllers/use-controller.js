@@ -8,16 +8,20 @@ class UseController  {
         try {
 
             const {email, password} = req.body
-            
+           // console.log('Функция регистрации')
+
+
             const userData = await userSevice.registration(email, password)
+            //console.log(userData, '- что возращает сама функция')
 
-            console.log(userData, '- что возращает сама функция')
 
+            console.log('Выполнение недопустимо ')
             res.cookie('refreshtoken',  userData.refreshToken, {maxAge: 30 * 24 * 60 * 1000, httpOnly: true} )
             return res.json(userData)
 
         } catch(e) {
-            console.log(e)
+            console.log(e, 'Глядим на ошибку')
+            next(e)
         }
 
     }
@@ -28,7 +32,7 @@ class UseController  {
 
 
         } catch(e) {
-            console.log(e)
+            next(e)
         }
 
     }
@@ -39,7 +43,7 @@ class UseController  {
 
 
         } catch(e) {
-            console.log(e)
+            next(e)
         }
 
     }
@@ -48,10 +52,14 @@ class UseController  {
     async activate(req, res, next) {
         try {
 
+            const activationLink = req.params.link
+            await userSevice.activate(activationLink)
+            return res.redirect(process.env.CLIENT_URL); // API_URL-сервер, CLIENT_URL-клиент
 
         } catch(e) {
-            console.log(e)
+            next(e)
         }
+
 
     }
 
@@ -61,7 +69,7 @@ class UseController  {
 
 
         } catch(e) {
-            console.log(e)
+            next(e)
         }
 
     }
@@ -71,7 +79,7 @@ class UseController  {
         try {
             res.json(['123', '456'])
         } catch(e) {
-            console.log(e)
+            next(e)
         }
 
     }

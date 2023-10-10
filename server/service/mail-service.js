@@ -27,7 +27,7 @@ class MailSevice {
             from: process.env.SMTP_USER,    // от кого исходит письмо
             to,                             // кому отправлем письмо
             subject: 'Активация аккаунта на' + process.env.API_URL,
-            text: '',
+            text: 'Здравствуйте',
             html:
             `
             <div/>
