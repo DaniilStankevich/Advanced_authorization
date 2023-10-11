@@ -1,5 +1,6 @@
 const userSevice = require('../service/user-service')
-
+const { validationResult } = require('express-validator')
+const ApiError = require('../exceptions/api-error')
 
 //Функции для каждого адреса
 class UseController  {
@@ -7,24 +8,27 @@ class UseController  {
     async registration (req, res, next) {
         try {
 
+            const errors = validationResult(req)
+            if(!errors.isEmpty()) {
+                return next(ApiError.BadRequest('Ошибка при валидации', errors.array()))  
+              // throw ApiError.BadRequest('Ошибка при валидации', errors.array())// - или так
+            }
+
             const {email, password} = req.body
-           // console.log('Функция регистрации')
-
-
             const userData = await userSevice.registration(email, password)
             //console.log(userData, '- что возращает сама функция')
 
-
-            console.log('Выполнение недопустимо ')
             res.cookie('refreshtoken',  userData.refreshToken, {maxAge: 30 * 24 * 60 * 1000, httpOnly: true} )
             return res.json(userData)
 
         } catch(e) {
-            console.log(e, 'Глядим на ошибку')
             next(e)
         }
 
     }
+
+
+
 
 
     async login(req, res, next) {

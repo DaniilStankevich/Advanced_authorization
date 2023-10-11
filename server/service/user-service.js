@@ -18,7 +18,6 @@ class UserSevice {
         }
 
 
-        
         const hashPassword = await bcrypt.hash(password, 3)  // шифрование пароля перед отправкой в БД
         const activationLink = uuid.v4()                     // ссылка по которой пользователь будет подтверждать аккаунт v34f-asfst-124saf
 
@@ -46,7 +45,7 @@ class UserSevice {
     async activate(activationLink) {
         const user = await UserModel.findOne({activationLink})
         if(!user){
-            return ApiError.BadRequest('Неккореетная ссылка активации')
+            throw ApIError.BadRequest('Неккореетная ссылка активации')
         }
 
 
