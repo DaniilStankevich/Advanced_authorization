@@ -48,12 +48,36 @@ class UserSevice {
             throw ApIError.BadRequest('Неккореетная ссылка активации')
         }
 
-
         user.isActivated = true // ссылка в БД этого пользователя становится "true"
         await user.save()       // сохранение в БД
 
-
     }
+
+
+    async login(email, password) {
+
+        // Поиск пользователя в БД
+        const user = await UserModel.findOne({email})
+        if(!user) {
+            throw ApIError.BadRequest('Пользователь с таким email не найден') 
+        }
+
+        // Cравнение захешированного паролья в БД, с паролем от пользователя
+        const isPassEquals = await bcrypt.compare(password, user.password)
+        if(!isPassEquals) {
+            throw ApIError.BadRequest('Неверный пароль') 
+        }
+
+        const userDTO = new userDto(user)
+        const tokens = tokenService.generateTokens({...userDTO}) // нужно передавать какую-то информацию о пользователе но не пароль
+        await tokenService.saveToken(userDTO.id, tokens.refreshToken)
+
+        return {
+            ...tokens,
+            user: userDTO
+        }
+    }
+    
 
 
 
