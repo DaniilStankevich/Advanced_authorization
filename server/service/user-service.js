@@ -40,8 +40,6 @@ class UserSevice {
         }
     }
 
-
-
     async activate(activationLink) {
         const user = await UserModel.findOne({activationLink})
         if(!user){
@@ -52,7 +50,6 @@ class UserSevice {
         await user.save()       // сохранение в БД
 
     }
-
 
     async login(email, password) {
 
@@ -72,14 +69,48 @@ class UserSevice {
         const tokens = tokenService.generateTokens({...userDTO}) // нужно передавать какую-то информацию о пользователе но не пароль
         await tokenService.saveToken(userDTO.id, tokens.refreshToken)
 
+
         return {
             ...tokens,
             user: userDTO
         }
     }
     
+    async logout(refreshToken ) {
+        const token = await tokenService.removeToken(refreshToken)
+        return token
+    }
 
+    // Перезапись токена
+    async refresh(refreshtoken) {
+        if(!refreshtoken) {
+            throw ApIError.UnavthorizedError()
+        }
 
+        const userData = tokenService.validateRefreshToken(refreshtoken)
+        const tokenFromDb = await tokenService.findToken(refreshtoken)
+
+        if(!userData | !tokenFromDb) {
+            throw ApIError.UnavthorizedError()
+        }
+
+        // Так как за 60 дней кака-то фионмарция о user моггла измениться 
+        // то необходимо в токен заложить новую информацию
+        const user = await UserModel.findById(userData.id) 
+        const userDTO = new userDto(user)
+        const tokens = tokenService.generateTokens({...userDTO}) // нужно передать какую-то информацию о пользователе, но не пароль
+        await tokenService.saveToken(userDTO.id, tokens.refreshToken)
+
+        return {
+            ...tokens,
+            user: userDTO
+        }
+    }
+
+    async getAllusers() {
+        const useres = UserModel.find()
+        return useres
+    }
 
 }
 

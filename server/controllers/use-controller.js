@@ -36,7 +36,7 @@ class UseController  {
 
             const { email, password } = req.body
             const userData = await userSevice.login(email, password)
-
+ 
             res.cookie('refreshtoken',  userData.refreshToken, {maxAge: 30 * 24 * 60 * 1000, httpOnly: true} )
             return res.json(userData) 
 
@@ -50,6 +50,15 @@ class UseController  {
     async logout(req, res, next) {
         try {
 
+            const { refreshtoken } = req.cookies //
+            console.log(refreshtoken, ' Кука ')
+
+            
+            const token = await userSevice.logout(refreshtoken)
+            res.clearCookie('refreshtoken')
+
+
+            return res.json(token)
 
         } catch(e) {
             next(e)
@@ -76,7 +85,11 @@ class UseController  {
     async refresh(req, res, next) {
         try {
 
-
+            const { refreshtoken } = req.cookies //
+            const userData = await userSevice.refresh(refreshtoken)
+            res.cookie('refreshtoken',  userData.refreshToken, {maxAge: 30 * 24 * 60 * 1000, httpOnly: true} )
+            return res.json(userData)
+            
         } catch(e) {
             next(e)
         }
@@ -86,7 +99,8 @@ class UseController  {
 
     async getUsers(req, res, next) {
         try {
-            res.json(['123', '456'])
+            const user = await userSevice.getAllusers()
+            res.json(user)
         } catch(e) {
             next(e)
         }
