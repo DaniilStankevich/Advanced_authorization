@@ -21,7 +21,6 @@ class MailSevice {
 
     async sendActivationMail(to, link) {  // email для отправки письма, ссылка
 
-        console.log(this.transporter, ' объект')
 
         await this.transporter.sendMail({
             from: process.env.SMTP_USER,    // от кого исходит письмо
