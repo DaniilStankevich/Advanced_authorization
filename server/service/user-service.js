@@ -12,6 +12,9 @@ class UserSevice {
 
     async registration (email, password) {
 
+        console.log(email, password, '-сервис рег')
+
+
         const candidate = await UserModel.findOne({email}) // поиск пользовтеля по email
         if(candidate) {
             throw ApIError.BadRequest(`Пользователь с почтовым адресом ${email} уже существует`) 
@@ -33,6 +36,8 @@ class UserSevice {
 
         // Сохранение refreshToken токена в БД
         await tokenService.saveToken(userDTO.id, tokens.refreshToken)
+
+        console.log('Завеешение')
 
         return {
             ...tokens,
@@ -83,6 +88,9 @@ class UserSevice {
 
     // Перезапись токена
     async refresh(refreshtoken) {
+
+        console.log(refreshtoken,'-реф')
+
         if(!refreshtoken) {
             throw ApIError.UnavthorizedError()
         }

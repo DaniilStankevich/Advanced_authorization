@@ -2,7 +2,7 @@ const ApiError = require('../exceptions/api-error')
 
 module.exports = function (err, req, res, next) {
 
-    console.log(err)
+    console.log('Проверка')
 
     //Проверка: является ли "err" экземпляром класса "ApiError"
     if(err instanceof ApiError ) {

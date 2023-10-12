@@ -14,7 +14,10 @@ const PORT = process.env.PORT | 5000
 //Middleware
 app.use(express.json())
 app.use(cookieParser())  // для обратоки cookie в каждом запросе
-app.use(cors())          // позволяет принимать запросы  от любого источника
+app.use(cors({
+    credentials: true,
+    origin: process.env.CLIENT_URL
+}))          // позволяет принимать запросы  от любого источника
 app.use('/api', router)
 app.use(errorMiddleware)
 
